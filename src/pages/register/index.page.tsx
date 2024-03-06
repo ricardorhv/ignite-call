@@ -56,6 +56,8 @@ export default function Register() {
     } catch (error) {
       console.log(error)
     }
+
+    await router.push('/register/connect-calendar')
   }
 
   return (
