@@ -78,8 +78,6 @@ export default async function handle(
       return availableTime > dayjs(new Date()).hour()
     });
 
-    console.log(onlyTimesAfterTheCurrentHour);
-
     return res.json({ possibleTimes, availableTimes: onlyTimesAfterTheCurrentHour })
   }
 
