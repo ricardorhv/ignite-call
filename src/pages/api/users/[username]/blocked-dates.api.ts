@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import dayjs from "dayjs"
 import { NextApiRequest, NextApiResponse } from "next"
 
 export default async function handle(
@@ -29,6 +30,7 @@ export default async function handle(
   const availableWeekDays = await prisma.userTimeIntervals.findMany({
     select: {
       week_day: true,
+      time_end_in_minutes: true,
     },
     where: {
       user_id: user.id,
@@ -59,8 +61,9 @@ export default async function handle(
   `
   const blockedDates = blockedDatesRaw.map(item => item.date)
 
-  console.log(blockedDates);
+  const currentDay = dayjs().get("day") - 1
 
+  const lastHourOfAppointmentOfToday = (availableWeekDays[currentDay]?.time_end_in_minutes / 60) - 1
 
-  return res.json({ blockedWeekDays, blockedDates })
+  return res.json({ blockedWeekDays, blockedDates, lastHourOfAppointmentOfToday })
 }

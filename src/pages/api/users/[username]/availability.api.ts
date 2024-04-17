@@ -68,18 +68,15 @@ export default async function handle(
   })
 
   const availableTimes = possibleTimes.filter(time => {
-    return !blockedTimes.some(blockedTime => blockedTime.date.getHours() === time)
+    const isTimeBlocked = blockedTimes.some(blockedTime => blockedTime.date.getHours() === time)
+
+    const isTimeInPast = referenceDate.set('hour', time).isBefore(new Date())
+
+    return !isTimeBlocked && !isTimeInPast
   })
 
-  const isToday = referenceDate.isSame(new Date(), 'day')
+  console.log(availableTimes);
 
-  if (isToday) {
-    const onlyTimesAfterTheCurrentHour = availableTimes.filter(availableTime => {
-      return availableTime > dayjs(new Date()).hour()
-    });
-
-    return res.json({ possibleTimes, availableTimes: onlyTimesAfterTheCurrentHour })
-  }
 
   return res.json({ possibleTimes, availableTimes })
 }

@@ -61,7 +61,7 @@ export const CalendarBody = styled('table', {
   },
 
   'tbody:before': {
-    content: '.',
+    content: '',
     lineHeight: '0.75rem',
     display: 'block',
     color: '$gray800',
