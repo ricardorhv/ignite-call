@@ -34,21 +34,30 @@ export function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
     ? dayjs(selectedDate).format('DD[ de ]MMMM')
     : null
 
-  const selectedDateWithoutTime = selectedDate ? dayjs(selectedDate).format('YYYY-MM-DD') : null
+  const selectedDateWithoutTime = selectedDate
+    ? dayjs(selectedDate).format('YYYY-MM-DD')
+    : null
 
-  const { data: availability } = useQuery<Availability>(['availability', selectedDateWithoutTime], async () => {
-    const response = await api.get(`/users/${username}/availability`, {
-      params: {
-        date: selectedDateWithoutTime,
-      }
-    })
-    return response.data
-  }, {
-    enabled: !!isDateSelected,
-  })
+  const { data: availability } = useQuery<Availability>(
+    ['availability', selectedDateWithoutTime],
+    async () => {
+      const response = await api.get(`/users/${username}/availability`, {
+        params: {
+          date: selectedDateWithoutTime,
+        },
+      })
+      return response.data
+    },
+    {
+      enabled: !!isDateSelected,
+    },
+  )
 
   function handleSelectTime(hour: number) {
-    const dateWithTime = dayjs(selectedDate).set("hour", hour).startOf('hour').toDate()
+    const dateWithTime = dayjs(selectedDate)
+      .set('hour', hour)
+      .startOf('hour')
+      .toDate()
 
     onSelectDateTime(dateWithTime)
   }
@@ -64,15 +73,20 @@ export function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
           </TimePickerHeader>
 
           <TimePickerList>
-            {
-              availability?.possibleTimes.map(hour => {
-                const hasNotHourAvailableInTheList = !availability.availableTimes.includes(hour)
+            {availability?.possibleTimes.map((hour) => {
+              const hasNotHourAvailableInTheList =
+                !availability.availableTimes.includes(hour)
 
-                return (
-                  <TimePickerItem onClick={() => handleSelectTime(hour)} disabled={hasNotHourAvailableInTheList} key={hour}>{String(hour).padStart(2, '0')}:00h</TimePickerItem>
-                )
-              })
-            }
+              return (
+                <TimePickerItem
+                  onClick={() => handleSelectTime(hour)}
+                  disabled={hasNotHourAvailableInTheList}
+                  key={hour}
+                >
+                  {String(hour).padStart(2, '0')}:00h
+                </TimePickerItem>
+              )
+            })}
           </TimePickerList>
         </TimePicker>
       )}

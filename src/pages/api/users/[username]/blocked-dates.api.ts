@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma"
-import dayjs from "dayjs"
-import { NextApiRequest, NextApiResponse } from "next"
+import { prisma } from '@/lib/prisma'
+import dayjs from 'dayjs'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handle(
   req: NextApiRequest,
@@ -37,12 +37,16 @@ export default async function handle(
     },
     where: {
       user_id: user.id,
-    }
+    },
   })
 
-  const blockedWeekDays = Array.from({ length: 7 }).map((_, i) => i).filter(weekDay => {
-    return !availableWeekDays.some(availableWeekDay => availableWeekDay.week_day === weekDay)
-  })
+  const blockedWeekDays = Array.from({ length: 7 })
+    .map((_, i) => i)
+    .filter((weekDay) => {
+      return !availableWeekDays.some(
+        (availableWeekDay) => availableWeekDay.week_day === weekDay,
+      )
+    })
 
   const blockedDatesRaw: Array<{ date: number }> = await prisma.$queryRaw`
     SELECT 
@@ -63,11 +67,16 @@ export default async function handle(
 
     HAVING COUNT(S.date) >= ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60)
   `
-  const blockedDates = blockedDatesRaw.map(item => item.date)
+  const blockedDates = blockedDatesRaw.map((item) => item.date)
 
-  const currentDay = dayjs().get("day") - 1
+  const currentDay = dayjs().get('day') - 1
 
-  const lastHourOfAppointmentOfToday = (availableWeekDays[currentDay]?.time_end_in_minutes / 60) - 1
+  const lastHourOfAppointmentOfToday =
+    availableWeekDays[currentDay]?.time_end_in_minutes / 60 - 1
 
-  return res.json({ blockedWeekDays, blockedDates, lastHourOfAppointmentOfToday })
+  return res.json({
+    blockedWeekDays,
+    blockedDates,
+    lastHourOfAppointmentOfToday,
+  })
 }

@@ -32,7 +32,9 @@ export default async function handle(
     date: z.string().datetime(),
   })
 
-  const { name, email, observations, date } = createSchedulingBody.parse(req.body)
+  const { name, email, observations, date } = createSchedulingBody.parse(
+    req.body,
+  )
 
   const schedulingDate = dayjs(date).startOf('hour')
 
@@ -46,7 +48,7 @@ export default async function handle(
     where: {
       user_id: user.id,
       date: schedulingDate.toDate(),
-    }
+    },
   })
 
   if (conflictingScheduling) {
@@ -62,7 +64,7 @@ export default async function handle(
       observations,
       date: schedulingDate.toDate(),
       user_id: user.id,
-    }
+    },
   })
 
   const calendar = google.calendar({
@@ -80,22 +82,19 @@ export default async function handle(
         dateTime: schedulingDate.format(),
       },
       end: {
-        dateTime: schedulingDate.add(1, 'hour').format()
+        dateTime: schedulingDate.add(1, 'hour').format(),
       },
-      attendees: [
-        { email, displayName: name }
-      ],
+      attendees: [{ email, displayName: name }],
       conferenceData: {
         createRequest: {
           requestId: scheduling.id,
           conferenceSolutionKey: {
-            type: 'hangoutsMeet'
-          }
-        }
-      }
+            type: 'hangoutsMeet',
+          },
+        },
+      },
     },
   })
-
 
   return res.status(201).json({})
 }

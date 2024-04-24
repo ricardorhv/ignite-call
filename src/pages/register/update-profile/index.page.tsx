@@ -54,8 +54,8 @@ export default function UpdateProfile() {
         <Header>
           <Heading as="strong">Bem-vindo ao Ignite Call!</Heading>
           <Text>
-            Precisamos de algumas informações para criar seu perfil! Ah, você pode
-            editar essas informações depois.
+            Precisamos de algumas informações para criar seu perfil! Ah, você
+            pode editar essas informações depois.
           </Text>
 
           <MultiStep size={4} currentStep={4} />

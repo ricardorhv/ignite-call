@@ -56,15 +56,18 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
 
   const username = String(router.query.username)
 
-  const { data: blockedDates } = useQuery<BlockedDates>(['blockedDates', currentDate.get('year'), currentDate.get('month')], async () => {
-    const response = await api.get(`/users/${username}/blocked-dates`, {
-      params: {
-        year: currentDate.get('year'),
-        month: String((currentDate.get('month') + 1)).padStart(2, '0'),
-      }
-    })
-    return response.data
-  })
+  const { data: blockedDates } = useQuery<BlockedDates>(
+    ['blockedDates', currentDate.get('year'), currentDate.get('month')],
+    async () => {
+      const response = await api.get(`/users/${username}/blocked-dates`, {
+        params: {
+          year: currentDate.get('year'),
+          month: String(currentDate.get('month') + 1).padStart(2, '0'),
+        },
+      })
+      return response.data
+    },
+  )
 
   const shortWeekDays = getWeekDays({ short: true })
 
@@ -104,9 +107,6 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
       return lastDayInCurrentMonth.add(i + 1, 'day')
     })
 
-    console.log(dayjs().get('hour') >= blockedDates.lastHourOfAppointmentOfToday);
-
-
     const calendarDays = [
       ...previousMonthFillArray.map((date) => {
         return {
@@ -117,10 +117,12 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
       ...daysInMonthArray.map((date) => {
         return {
           date,
-          disabled: date.endOf('day').isBefore(new Date()) ||
+          disabled:
+            date.endOf('day').isBefore(new Date()) ||
             blockedDates.blockedWeekDays.includes(date.get('day')) ||
             blockedDates.blockedDates.includes(date.get('date')) ||
-            date.isSame(dayjs(), "date") && dayjs().get('hour') >= blockedDates.lastHourOfAppointmentOfToday,
+            (date.isSame(dayjs(), 'date') &&
+              dayjs().get('hour') >= blockedDates.lastHourOfAppointmentOfToday),
         }
       }),
       ...nextMonthFillArray.map((date) => {
@@ -130,7 +132,6 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
         }
       }),
     ]
-
 
     const calendarWeeks = calendarDays.reduce<CalendarWeeks>(
       (weeks, _, i, original) => {

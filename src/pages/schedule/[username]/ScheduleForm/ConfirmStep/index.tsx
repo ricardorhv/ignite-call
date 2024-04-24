@@ -21,7 +21,10 @@ interface ConfirmStepProps {
   onCancelConfirmation: () => void
 }
 
-export function ConfirmStep({ schedulingDateTime, onCancelConfirmation }: ConfirmStepProps) {
+export function ConfirmStep({
+  schedulingDateTime,
+  onCancelConfirmation,
+}: ConfirmStepProps) {
   const {
     register,
     handleSubmit,
@@ -43,12 +46,13 @@ export function ConfirmStep({ schedulingDateTime, onCancelConfirmation }: Confir
       date: schedulingDateTime,
     })
 
-
     onCancelConfirmation()
   }
 
-  const describedDate = dayjs(schedulingDateTime).format("DD[ de ]MMMM[ de ]YYYY")
-  const describedTime = dayjs(schedulingDateTime).format("HH:mm[h]")
+  const describedDate = dayjs(schedulingDateTime).format(
+    'DD[ de ]MMMM[ de ]YYYY',
+  )
+  const describedTime = dayjs(schedulingDateTime).format('HH:mm[h]')
 
   return (
     <ConfirmForm as="form" onSubmit={handleSubmit(handleConfirmScheduling)}>
@@ -90,7 +94,7 @@ export function ConfirmStep({ schedulingDateTime, onCancelConfirmation }: Confir
         <Button type="button" variant="tertiary" onClick={onCancelConfirmation}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={isSubmitting} >
+        <Button type="submit" disabled={isSubmitting}>
           Confirmar
         </Button>
       </FormActions>
