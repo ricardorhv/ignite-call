@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 export async function getGoogleOAuthToken(userId: string) {
   const account = await prisma.account.findFirstOrThrow({
     where: {
-      provider: 'Google',
+      provider: 'google',
       user_id: userId,
     },
   })
