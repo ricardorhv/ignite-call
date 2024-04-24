@@ -76,14 +76,8 @@ export default async function handle(
     where: {
       user_id: user.id,
       date: {
-        gte: referenceDate
-          .set('hour', startHour)
-          .add(timezoneOffsetInHours, 'hours')
-          .toDate(),
-        lte: referenceDate
-          .set('hour', endHour)
-          .add(timezoneOffsetInHours, 'hours')
-          .toDate(),
+        gte: referenceDate.set('hour', startHour).toDate(),
+        lte: referenceDate.set('hour', endHour).toDate(),
       },
     },
   })
