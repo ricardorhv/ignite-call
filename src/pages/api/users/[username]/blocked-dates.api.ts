@@ -27,7 +27,10 @@ export default async function handle(
     return res.status(404).json({ message: 'User does not exist.' })
   }
 
-  const availableWeekDays = await prisma.userTimeIntervals.findMany({
+  const availableWeekDays: {
+    week_day: number
+    time_end_in_minutes: number
+  }[] = await prisma.userTimeIntervals.findMany({
     select: {
       week_day: true,
       time_end_in_minutes: true,
