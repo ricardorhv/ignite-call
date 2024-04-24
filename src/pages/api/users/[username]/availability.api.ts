@@ -90,7 +90,8 @@ export default async function handle(
 
   const availableTimes = possibleTimes.filter((time) => {
     const isTimeBlocked = blockedTimes.some(
-      (blockedTime) => blockedTime.date.getHours() === time,
+      (blockedTime) =>
+        blockedTime.date.getUTCHours() - timezoneOffsetInHours === time,
     )
 
     const isTimeInPast = referenceDate
