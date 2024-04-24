@@ -88,6 +88,8 @@ export default async function handle(
     },
   })
 
+  console.log(timezoneOffsetInHours)
+
   const availableTimes = possibleTimes.filter((time) => {
     const isTimeBlocked = blockedTimes.some(
       (blockedTime) =>
